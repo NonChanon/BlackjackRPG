@@ -226,14 +226,15 @@ public class InGame {
                     }
                     numEnemy = i;
                 }
-                if (gameFight.isCheckWindow()) {
+                if (BlackjackController.isCheckWindow()) {
                     infoPause.setVisible(true);
-                } else if (gameFight.isCheckWindow() == false) {
-                    infoPause.setVisible(false);
-                }
+                } 
+                    
+                
 
-                if (event.getCode() == KeyCode.ENTER && gameFight.isCheckWindow() == true) {
-                    gameFight.setCheckWindow(false);
+                if (event.getCode() == KeyCode.ENTER && BlackjackController.isCheckWindow()) {
+                    BlackjackController.setCheckWindow(false);
+                    infoPause.setVisible(false);
                 }
                 /*if (event.getCode() == KeyCode.F) {
                     info.setText("");

@@ -271,7 +271,7 @@ public class BlackjackController implements Initializable {
     @FXML
     private void leaveButton(ActionEvent event) throws IOException {
         if(isCheckLeave()) setCheckGame(false);
-        setCheckWindow(false);
+        
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 

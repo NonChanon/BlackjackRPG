@@ -51,21 +51,23 @@ public class BlackjackController implements Initializable {
     private boolean checkLoopStand = true;
     private boolean checkEnd = true;
     
+
+    private static boolean checkGame = false;
     private static boolean checkWindow = false;
     private static boolean playerWin = false;
-    
+    private static boolean playerDraw = false;
+    private static boolean playerBlackjack = false;
+    private static boolean checkLeave = true;
+
     private int numCardPalyer = 2;
     private int numCardEnemy = 2;
 
     private Deck playingDeck = new Deck();
     private Deck playerCards = new Deck();
     private Deck enemyCards = new Deck();
-    
-   
-    
-    
+
     private Stage window = new Stage();
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         playerCards.moveAllToDeck(playingDeck);
@@ -84,12 +86,16 @@ public class BlackjackController implements Initializable {
         }
 
         enemyCards.draw(playingDeck);
+        pointEnemy.setText(enemyCards.cardsValue() + "/21");
         enemyCards.draw(playingDeck);
-        for (int i = 0; i < 2; i++) {
-            Rectangle temp = (Rectangle) enemyCard.getChildren().get(i);
-            temp.setVisible(true);
-            temp.setFill(new ImagePattern(new Image("image/backCard.png")));
-        }
+        Rectangle temp1 = (Rectangle) enemyCard.getChildren().get(0);
+
+        temp1.setVisible(true);
+        temp1.setFill(new ImagePattern(new Image("image/" + enemyCards.getCradSuit(0) + enemyCards.getCradValue(0) + ".png")));
+
+        Rectangle temp2 = (Rectangle) enemyCard.getChildren().get(1);
+        temp2.setVisible(true);
+        temp2.setFill(new ImagePattern(new Image("image/backcard.png")));
 
         pointPlayer.setText(playerCards.cardsValue() + "/21");
 
@@ -98,7 +104,8 @@ public class BlackjackController implements Initializable {
     }
 
     @FXML
-    private void drawCardButton(ActionEvent event) {
+    private void drawCardButton(ActionEvent event
+    ) {
         if (numCardPalyer < 5 && checkStandaPlayer) {
             playerCards.draw(playingDeck);
             System.out.println((numCardPalyer + 1) + "." + playerCards.getCradSuit(numCardPalyer) + " " + playerCards.getCradValue(numCardPalyer));
@@ -110,7 +117,8 @@ public class BlackjackController implements Initializable {
     }
 
     @FXML
-    private void standButton(ActionEvent event) {
+    private void standButton(ActionEvent event
+    ) {
         checkStandaPlayer = false;
 
         while (checkStandaEnemy || checkLoopStand == false) {
@@ -139,6 +147,8 @@ public class BlackjackController implements Initializable {
                 checkEnd = false;
                 endGame();
                 setPlayerWin(false);
+                setPlayerDraw(true);
+                setCheckLeave(false);
 
             } else if (checkWinPlayer == false && checkWinEnemy == false) {
                 playDraw.setVisible(true);
@@ -146,18 +156,25 @@ public class BlackjackController implements Initializable {
                 checkEnd = false;
                 endGame();
                 setPlayerWin(false);
+                setPlayerDraw(true);
+                setCheckLeave(false);
+
             } else if (playerCards.cardsValue() > enemyCards.cardsValue() && checkWinPlayer) {
                 playWin.setVisible(true);
                 checkLoopStand = true;
                 checkEnd = false;
                 endGame();
                 setPlayerWin(true);
+                setPlayerDraw(false);
+                setCheckLeave(false);
             } else if (playerCards.cardsValue() < enemyCards.cardsValue() && checkWinEnemy) {
                 playLose.setVisible(true);
                 checkLoopStand = true;
                 checkEnd = false;
                 endGame();
                 setPlayerWin(false);
+                setPlayerDraw(false);
+                setCheckLeave(false);
             }
 
         }
@@ -166,13 +183,16 @@ public class BlackjackController implements Initializable {
             checkLoopStand = true;
             endGame();
             setPlayerWin(false);
-            
+            setPlayerDraw(false);
+            setCheckLeave(false);
+
         } else if (checkWinEnemy == false && checkEnd) {
             playWin.setVisible(true);
             checkLoopStand = true;
             endGame();
             setPlayerWin(true);
-            
+            setPlayerDraw(false);
+            setCheckLeave(false);
         }
 
         if (enemyCards.cardsValue() <= 10 && checkStandaEnemy && checkWinPlayer) {
@@ -211,12 +231,16 @@ public class BlackjackController implements Initializable {
             playLose.setVisible(true);
             checkLoopStand = true;
             endGame();
-            setPlayerWin(false);  
+            setPlayerWin(false);
+            setPlayerDraw(false);
+            setCheckLeave(false);
         } else if (checkWinEnemy == false && checkEnd) {
             playWin.setVisible(true);
             checkLoopStand = true;
             endGame();
-            setPlayerWin(true); 
+            setPlayerWin(true);
+            setPlayerDraw(false);
+            setCheckLeave(false);
         }
     }
 
@@ -230,26 +254,29 @@ public class BlackjackController implements Initializable {
         if (playerCards.deckSize() == 2 && playerCards.cardsValue() == 21 || enemyCards.deckSize() == 2 && enemyCards.cardsValue() == 21) {
             playblackjack.setVisible(true);
         }
-        
+
     }
-    public void showWindow() throws IOException
-    {
+
+    public void showWindow() throws IOException {
+        setCheckGame(true);
         setCheckWindow(true);
         Parent blackjack = FXMLLoader.load(getClass().getResource("Blackjack.fxml"));
         Scene blackjackScene = new Scene(blackjack);
         window.setTitle("Blackjack");
         window.setScene(blackjackScene);
         window.show();
-        
+
     }
+
     @FXML
     private void leaveButton(ActionEvent event) throws IOException {
-        //setCheckWindow(false);
+        if(isCheckLeave()) setCheckGame(false);
+        setCheckWindow(false);
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
-    private void drawCardButtonEntered(MouseEvent event) {       
+    private void drawCardButtonEntered(MouseEvent event) {
         hitView.setVisible(true);
 
     }
@@ -279,12 +306,13 @@ public class BlackjackController implements Initializable {
         leaveView.setVisible(false);
     }
 
-    public boolean isCheckWindow() {
+    public static boolean isCheckWindow() {
         return checkWindow;
     }
-    public void setCheckWindow(boolean set) {
-        checkWindow = set;
-    }
+
+    public static void setCheckWindow(boolean checkWindow) {
+        BlackjackController.checkWindow = checkWindow;
+    }    
 
     public static boolean isPlayerWin() {
         return playerWin;
@@ -293,6 +321,37 @@ public class BlackjackController implements Initializable {
     public static void setPlayerWin(boolean playerWin) {
         BlackjackController.playerWin = playerWin;
     }
+
+    public static boolean isCheckGame() {
+        return checkGame;
+    }
+
+    public static void setCheckGame(boolean checkGame) {
+        BlackjackController.checkGame = checkGame;
+    }
+
+    public static boolean isPlayerDraw() {
+        return playerDraw;
+    }
+
+    public static void setPlayerDraw(boolean playerDraw) {
+        BlackjackController.playerDraw = playerDraw;
+    }
+
+    public static boolean isPlayerBlackjack() {
+        return playerBlackjack;
+    }
+
+    public static void setPlayerBlackjack(boolean playerBlackjack) {
+        BlackjackController.playerBlackjack = playerBlackjack;
+    }
+
+    public static boolean isCheckLeave() {
+        return checkLeave;
+    }
+
+    public static void setCheckLeave(boolean checkLeave) {
+        BlackjackController.checkLeave = checkLeave;
+    }
     
-      
 }

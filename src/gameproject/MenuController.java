@@ -38,23 +38,22 @@ public class MenuController implements Initializable {
     @FXML
     private ImageView exit;
     
+    public static Stage window;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
 
     @FXML
-    private void onPlay(ActionEvent event) throws IOException {     
+    public void onPlay(ActionEvent event) throws IOException {     
         Scene inGameScene = new Scene(inGame.createContent());
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(inGameScene);
         window.show();
         inGame.upDate(inGameScene);
-        
-        
-        
     }
-
+    
     @FXML
     private void onHowtoplay(ActionEvent event) throws IOException {
         Parent howtoplayParent = FXMLLoader.load(getClass().getResource("HowToPlay.fxml"));
@@ -119,4 +118,5 @@ public class MenuController implements Initializable {
         exit.setVisible(true);
     }
     
+   
 }

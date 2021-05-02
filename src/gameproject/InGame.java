@@ -231,18 +231,11 @@ public class InGame {
                 } 
                     
                 
-
                 if (event.getCode() == KeyCode.ENTER && BlackjackController.isCheckWindow()) {
                     BlackjackController.setCheckWindow(false);
                     infoPause.setVisible(false);
                 }
-                /*if (event.getCode() == KeyCode.F) {
-                    info.setText("");
-                    enemy.get(i).setVisible(false);
-                    enemy.remove(i);
-                    gameFight.setCheckWindow(false);
-                    
-                }*/
+                
 
                 if (BlackjackController.isPlayerDraw() == false && BlackjackController.isCheckGame() && BlackjackController.isPlayerWin() == true && event.getCode() == KeyCode.ENTER && checkW) {
                     BlackjackController.setPlayerWin(false);
@@ -258,6 +251,8 @@ public class InGame {
                     BlackjackController.setCheckLeave(true);
 
                 } else if (BlackjackController.isPlayerDraw() == false && BlackjackController.isCheckGame() && BlackjackController.isPlayerWin() == false && event.getCode() == KeyCode.ENTER && checkW) {
+                    BlackjackController.setPlayerWin(false);
+                    BlackjackController.setCheckGame(false);
                     hpPlayer--;
                     BlackjackController.setPlayerBlackjack(false);
                     checkW = false;
@@ -271,7 +266,7 @@ public class InGame {
                         Logger.getLogger(InGame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                //System.out.println("gameFight : " + gameFight.isCheckWindow());
+                
             }
             if (checkCollision(player, stair)) {
                 infoE.setVisible(true);

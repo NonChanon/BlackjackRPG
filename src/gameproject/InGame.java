@@ -22,13 +22,15 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 public class InGame {
 
-    Image playerImage = new Image("image/player.png");
+    Image playerImage = new Image("image/2-Recovered.png");
     Image wallImage = new Image("image/wall.png");
     Image monsterImage = new Image("image/spider_monster.png");
     Image stairImage = new Image("image/stair.png");
@@ -45,14 +47,18 @@ public class InGame {
     private String map = "************   *     **** * ****** * *     ** * ***** ** *   *   ** *** * ****     *   ** ******* **         ************";
     private boolean isFight = false;
     private boolean whileCheck = false;
-
+     
     public Parent createContent() {
         Pane root = new Pane();
         root.setPrefSize(830, 550);
         Rectangle InGameBG = new Rectangle(830, 550);
         InGameBG.setFill(Color.BLACK);
-        info.setTranslateX(50);
-        info.setTranslateY(50);
+        Font font = new Font("font/font1.TTF",20);
+        info.setFont(font);
+        info.setTranslateX(620);
+        info.setTranslateY(100);
+        info.setFill(Color.WHITE);
+        
 
         mapGen mapgen = new mapGen();
 
@@ -107,7 +113,7 @@ public class InGame {
         enemy.add(new Entity(xPositionE * 50, yPositionE * 50, 50, 50, monsterImage));
         stair = new Entity(xPositionS * 50, yPositionS * 50, 50, 50, stairImage);
 
-        root.getChildren().addAll(InGameBG, info, stair, player);
+        root.getChildren().addAll(InGameBG, stair, player, info);
 
         for (Entity objecT : wall) {
             root.getChildren().addAll(objecT);
@@ -146,7 +152,6 @@ public class InGame {
 
     public void upDate(Scene scene) {
         move = '0';
-        //Parent fightParent = FXMLLoader.load(getClass().getResource("BlackJack.fxml"));
         scene.setOnKeyPressed(event -> {
             if (gameFight.isCheckWindow() == false) {
                 if (event.getCode() == KeyCode.W) {
@@ -173,24 +178,50 @@ public class InGame {
                         gameFight.showWindow();
                     } catch (IOException ex) {
                         Logger.getLogger(InGame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    player.setTranslateY(player.getTranslateY() + 50);   
+                    }  
+                
                 }
-                if (event.getCode() == KeyCode.ENTER) gameFight.setCheckWindow(false);
-                if (event.getCode() == KeyCode.F) {
+                if(gameFight.isCheckWindow()) info.setText("PLEASE ENTER");
+                else if(gameFight.isCheckWindow() == false) info.setText(" ");
+                if (event.getCode() == KeyCode.ENTER) 
+                {
+                    gameFight.setCheckWindow(false);
+                }
+                /*if (event.getCode() == KeyCode.F) {
                     info.setText("");
                     enemy.get(i).setVisible(false);
                     enemy.remove(i);
                     gameFight.setCheckWindow(false);
                     
+                }*/
+                if(gameFight.isPlayerWin() == true && event.getCode() == KeyCode.ENTER) 
+                {
+                    gameFight.setPlayerWin(false);
+                    enemy.get(i).setVisible(false);
+                    enemy.remove(i);
+                    
                 }
-                System.out.println("gameFight : " + gameFight.isCheckWindow());
+                
+                //System.out.println("gameFight : " + gameFight.isCheckWindow());
             }
             if (checkCollision(player, stair)) {
             }
 
             for (Entity objecT : wall) {
                 if (checkCollision(player, objecT) == true) {
+                    if (move == 'w') {
+                        player.setTranslateY(player.getTranslateY() + 50);
+                    } else if (move == 's') {
+                        player.setTranslateY(player.getTranslateY() - 50);
+                    } else if (move == 'a') {
+                        player.setTranslateX(player.getTranslateX() + 50);
+                    } else if (move == 'd') {
+                        player.setTranslateX(player.getTranslateX() - 50);
+                    }
+                }
+            }
+            for (int i = 0; i < enemy.size(); i++) {
+                if (checkCollision(player, enemy.get(i)) == true) {
                     if (move == 'w') {
                         player.setTranslateY(player.getTranslateY() + 50);
                     } else if (move == 's') {

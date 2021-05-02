@@ -82,5 +82,20 @@
             <Font name="8BIT WONDER Nominal" size="34.0" />
          </font>
       </Label>
+      <ImageView fx:id="leaveView1" fitHeight="133.0" fitWidth="133.0" layoutX="603.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/spider_monster.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="leaveView11" fitHeight="133.0" fitWidth="161.0" layoutX="64.0" layoutY="229.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/2-Recovered.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="playblackjack1" layoutX="620.0" layoutY="39.0" prefHeight="42.0" prefWidth="117.0" text="Spider" textFill="WHITE">
+         <font>
+            <Font name="8BIT WONDER Nominal" size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

@@ -232,7 +232,7 @@ public class InGame {
                     infoPause.setVisible(false);
                 }
 
-                if (event.getCode() == KeyCode.ENTER) {
+                if (event.getCode() == KeyCode.ENTER && gameFight.isCheckWindow() == true) {
                     gameFight.setCheckWindow(false);
                 }
                 /*if (event.getCode() == KeyCode.F) {
